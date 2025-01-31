@@ -1,0 +1,112 @@
+let selectedColor;
+let x = 200, y = 200;
+let dragging = false;
+let offsetX = 0, offsetY = 0;
+let paintPoints = []; // Now stores line segments: { start, end, color }
+let currentLine = null; // Tracks the current line being drawn
+
+function setup() {
+  createCanvas(windowWidth, windowHeight);
+  colorMode(HSB);
+  selectedColor = color(0, 0, 100);
+}
+
+function draw() {
+  background(50, 50, 50);
+  //Canvas
+  fill(0, 0, 93);
+  rect(400, 200, 700, 400);
+
+  // Draw stored paint points
+  for (let i = 0; i < paintPoints.length; i++) {
+    fill(paintPoints[i].color);
+    noStroke();
+    ellipse(paintPoints[i].x, paintPoints[i].y, 10);
+  }
+
+  //Color pallet
+  fill(0, 100, 100);
+  square(402,202, 20);
+  fill(40, 100, 100);
+  square(402, 222, 20);
+  fill(60, 100, 100);
+  square(402, 242, 20);
+  fill(80, 100, 100);
+  square(402,262, 20);
+  fill(180, 100, 100);
+  square(402,282, 20);
+  fill(225, 100, 100);
+  square(402,302, 20);
+  fill(330, 60, 90);
+  square(402,322, 20);
+  fill(30, 80, 40);
+  square(402,342, 20);
+  fill(0, 0, 100);
+  square(402,362, 20);
+  fill(0, 0, 0);
+  square(402,382, 20);
+  
+  //Display of current color selected
+  if (dragging) {
+    x += (mouseX - pmouseX);
+    y += (mouseY - pmouseY);
+}
+
+  fill(selectedColor);
+  noStroke();
+  square(x, y, 20);
+}
+
+function mouseClicked() {
+  if (mouseX > 402 && mouseX < 422) {
+    let index = Math.floor((mouseY - 202) / 20);
+    
+    if (index >= 0 && index < 10) {
+      let colors = [
+        [0, 100, 100],  // Red
+        [40, 100, 100], // Orange
+        [60, 100, 100], // Yellow
+        [80, 100, 100], // Green
+        [180, 100, 100], // Cyan
+        [225, 100, 100], // Blue
+        [330, 60, 90],  // Pink
+        [30, 80, 40],   // Brown
+        [0, 0, 100],    // White
+        [0, 0, 0]       // Black
+      ];
+
+      selectedColor = color(colors[index][0], colors[index][1], colors[index][2]);
+    }
+  }
+}
+
+function mousePressed() {
+  // Check if clicking the color box
+  if (mouseX >= x && mouseX <= x + 20 && mouseY >= y && mouseY <= y + 20) {
+    dragging = true;
+    offsetX = mouseX - x;
+    offsetY = mouseY - y;
+  }
+  // Start a new line if clicking the canvas
+  else if (mouseX > 400 && mouseX < 1100 && mouseY > 200 && mouseY < 600) {
+    currentLine = {
+      start: { x: mouseX, y: mouseY },
+      end: { x: mouseX, y: mouseY },
+      color: selectedColor
+    };
+  }
+}
+
+function mouseDragged() {
+  if (dragging) {
+    return;
+  }
+
+  if (mouseX > 400 && mouseX < 1100 && mouseY > 200 && mouseY < 600) {
+    paintPoints.push({ x: mouseX, y: mouseY, color: selectedColor });
+  }
+}
+
+function mouseReleased() {
+  dragging = false;
+}
