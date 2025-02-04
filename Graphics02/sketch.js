@@ -2,8 +2,7 @@ let selectedColor;
 let x = 200, y = 200;
 let dragging = false;
 let offsetX = 0, offsetY = 0;
-let paintPoints = []; // Now stores line segments: { start, end, color }
-let currentLine = null; // Tracks the current line being drawn
+let paintPoints = [];
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
@@ -46,7 +45,7 @@ function draw() {
   fill(0, 0, 0);
   square(402,382, 20);
   
-  //Display of current color selected
+  //Coloring square
   if (dragging) {
     x += (mouseX - pmouseX);
     y += (mouseY - pmouseY);
@@ -81,19 +80,10 @@ function mouseClicked() {
 }
 
 function mousePressed() {
-  // Check if clicking the color box
   if (mouseX >= x && mouseX <= x + 20 && mouseY >= y && mouseY <= y + 20) {
     dragging = true;
     offsetX = mouseX - x;
     offsetY = mouseY - y;
-  }
-  // Start a new line if clicking the canvas
-  else if (mouseX > 400 && mouseX < 1100 && mouseY > 200 && mouseY < 600) {
-    currentLine = {
-      start: { x: mouseX, y: mouseY },
-      end: { x: mouseX, y: mouseY },
-      color: selectedColor
-    };
   }
 }
 
@@ -103,10 +93,11 @@ function mouseDragged() {
   }
 
   if (mouseX > 400 && mouseX < 1100 && mouseY > 200 && mouseY < 600) {
-    paintPoints.push({ x: mouseX, y: mouseY, color: selectedColor });
+    let steps = dist(mouseX, mouseY, pmouseX, pmouseY);
+    for (let i = 0; i < steps; i++) {
+      let x = lerp(pmouseX, mouseX, i / steps);
+      let y = lerp(pmouseY, mouseY, i / steps);
+      paintPoints.push({ x: x, y: y, color: selectedColor });
+    }
   }
-}
-
-function mouseReleased() {
-  dragging = false;
 }
