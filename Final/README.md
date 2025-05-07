@@ -2,8 +2,6 @@
 
 Dodge Survival is a fast-paced avoidance game where players control a green square to dodge falling red obstacles. The goal is to survive as long as possible while the game progressively speeds up, using three Arduino-controlled LEDs to track lives. Players lose lives when obstacles hit the bottom of the screen and aim for the highest score through endurance.  
 
-![Game Preview](dodge_survival.png)  
-
 ## Outline  
 
 - [Objects](#objects)  
